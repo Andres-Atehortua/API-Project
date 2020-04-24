@@ -5,38 +5,38 @@ class CommentController {
   }
 
   async get(req, res) {
-    const { commentId } = req.params;
-    const comment = await _commentService.get(commentId);
+    const { commentID } = req.params;
+    const comment = await _commentService.get(commentID);
     return res.send(comment);
   }
 
   async update(req, res) {
     const { body } = req;
-    const { commentId } = req.params;
-    const updatedComment = await _commentService.update(commentId, body);
+    const { commentID } = req.params;
+    const updatedComment = await _commentService.update(commentID, body);
     return res.send(updatedComment);
   }
 
   async delete(req, res) {
-    const { commentId } = req.params;
-    const deletedComment = await _commentService.delete(commentId);
+    const { commentID } = req.params;
+    const deletedComment = await _commentService.delete(commentID);
     return res.send(deletedComment);
   }
 
   async getIdeaComments(req, res) {
-    const { ideaId } = req.params;
-    const comments = await _commentService.getIdeaComments(ideaId);
+    const { ideaID } = req.params;
+    const comments = await _commentService.getIdeaComments(ideaID);
     return res.send(comments);
   }
 
   async createComment(req, res) {
     const { body } = req;
-    const { ideaId } = req.params;
-    const { id: userId } = req.user;
+    const { ideaID } = req.params;
+    const { id: userID } = req.user;
     const createdComment = await _commentService.createComment(
       body,
-      ideaId,
-      userId
+      ideaID,
+      userID
     );
     return res.status(201).send(createdComment);
   }
