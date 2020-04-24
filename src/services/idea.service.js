@@ -2,7 +2,7 @@ const BaseService = require("./base.service");
 let _ideaRepository = null;
 
 class IdeaService extends BaseService {
-  constructor(IdeaRepository) {
+  constructor({ IdeaRepository }) {
     super(IdeaRepository);
     _ideaRepository = IdeaRepository;
   }
@@ -11,47 +11,55 @@ class IdeaService extends BaseService {
     if (!author) {
       const error = new Error();
       error.status = 400;
-      error.message = "User ID must be sent";
+      error.message = "userId must be sent";
       throw error;
     }
+
     return await _ideaRepository.getUserIdeas(author);
   }
 
-  async upVoteIdea(ideaID) {
-    if (!ideaID) {
+  async upvoteIdea(ideaId) {
+    if (!ideaId) {
       const error = new Error();
       error.status = 400;
-      error.message = "Idea ID must be sent";
+      error.message = "ideaId must be sent";
       throw error;
     }
-    const idea = await _ideaRepository.get(ideaID);
+
+    const idea = await _ideaRepository.get(ideaId);
 
     if (!idea) {
       const error = new Error();
       error.status = 404;
-      error.message = "Idea does not exist";
+      error.message = "idea does not exist";
       throw error;
     }
+
     idea.upvotes.push(true);
-    return await _ideaRepository.update(ideaID, { upvotes: idea.upvotes });
+
+    return await _ideaRepository.update(ideaId, { upvotes: idea.upvotes });
   }
-  async downVoteIdea(ideaID) {
-    if (!ideaID) {
+
+  async downvoteIdea(ideaId) {
+    if (!ideaId) {
       const error = new Error();
       error.status = 400;
-      error.message = "Idea ID must be sent";
+      error.message = "ideaId must be sent";
       throw error;
     }
-    const idea = await _ideaRepository.get(ideaID);
+
+    const idea = await _ideaRepository.get(ideaId);
 
     if (!idea) {
       const error = new Error();
       error.status = 404;
-      error.message = "Idea does not exist";
+      error.message = "idea does not exist";
       throw error;
     }
+
     idea.downvotes.push(true);
-    return await _ideaRepository.update(ideaID, { upvotes: idea.downvotes });
+
+    return await _ideaRepository.update(ideaId, { downvotes: idea.downvotes });
   }
 }
 

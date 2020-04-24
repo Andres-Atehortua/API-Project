@@ -1,49 +1,59 @@
 const BaseService = require("./base.service");
-let _commentRepository = null;
-let _ideaRepository = null;
+let _commentRepository = null,
+  _ideaRepository = null;
 
 class CommentService extends BaseService {
-  constructor(CommentRepository, IdeaRepository) {
+  constructor({ CommentRepository, IdeaRepository }) {
     super(CommentRepository);
     _commentRepository = CommentRepository;
     _ideaRepository = IdeaRepository;
   }
-  async getIdeaComments(ideaID) {
-    if (!ideaID) {
+
+  async getIdeaComments(ideaId) {
+    if (!ideaId) {
       const error = new Error();
       error.status = 400;
-      error.message = "Idea ID must be sent";
+      error.message = "ideaId must be sent";
       throw error;
     }
-    const idea = await _ideaRepository.get(ideaID);
+
+    const idea = await _ideaRepository.get(ideaId);
+
     if (!idea) {
       const error = new Error();
       error.status = 404;
-      error.message = "Idea does not exist";
+      error.message = "idea does not exist";
       throw error;
     }
+
     const { comments } = idea;
     return comments;
   }
-  async createComment(comment, ideaID) {
-    if (!idea) {
+
+  async createComment(comment, ideaId, userId) {
+    if (!ideaId) {
       const error = new Error();
-      error.status = 404;
-      error.message = "Idea does not exist";
+      error.status = 400;
+      error.message = "ideaId must be sent";
       throw error;
     }
 
-    const idea = await _ideaRepository.get(ideaID);
+    const idea = await _ideaRepository.get(ideaId);
 
     if (!idea) {
       const error = new Error();
       error.status = 404;
-      error.message = "Idea does not exist";
+      error.message = "idea does not exist";
       throw error;
     }
-    const createcComment = await _commentRepository.create(comment);
-    idea.comments.push(createcComment);
-    return await _ideaRepository.update(ideaID, { comments: idea.comments });
+
+    const createdComment = await _commentRepository.create({
+      ...comment,
+      author: userId,
+    });
+    idea.comments.push(createdComment);
+
+    return await _ideaRepository.update(ideaId, { comments: idea.comments });
   }
 }
 

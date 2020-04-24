@@ -1,7 +1,7 @@
 class HomeService {
   index() {
     return {
-      message: "Hello world",
+      message: "Hello World!",
     };
   }
 }
